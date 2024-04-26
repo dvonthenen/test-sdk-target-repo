@@ -1,13 +1,10 @@
 name: API Spec Change
 on:
-  push:
-    branches:
-      - main
-      - release-*
-    paths:
-        - "api/sdk.spec"
-    tags-ignore:
-      - "**"
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "Release version that has to be tested"
+        required: true
 
 jobs:
   build:
@@ -18,14 +15,36 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v1
 
+      - name: Config credentials
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+        shell: bash
+        run: |
+          git config --global pull.rebase true
+          git config --global url."https://git:$GITHUB_TOKEN@github.com".insteadOf "https://github.com"
+
       - name: Ensure dependencies installed
         shell: bash
         run: |
           make ensure-deps
+          curl -L https://repo1.maven.org/maven2/io/swagger/codegen/v3/swagger-codegen-cli/3.0.55/swagger-codegen-cli-3.0.55.jar -o swagger-codegen-cli.jar
 
       - name: Trigger Downstream API Change
         shell: bash
+        env:
+            CI_BUILD: true
+            GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         run: |
-          gh workflow run --repo https://github.com/dvonthenen/test-sdk-target-repo/ \
-            --ref main \
-            api-spec-change.yaml
+          get reset --hard
+          curl -LO https://github.com/dvonthenen/test-api-source-repo/blob/main/api/api.yaml
+          mkdir -p api
+          mv -f api.yaml api/api.yaml
+          java -jar swagger-codegen-cli.jar generate -i api/api.yaml -l python -o ./
+          rm swagger-codegen-cli.jar
+          BRANCH_NAME="api-spec-${{ github.run_id }}"
+          git checkout -b "$BRANCH_NAME"
+          git add -A
+          git commit -s -m "auto-generated - update API spec"
+          git push origin "$BRANCH_NAME"
+          gh pr create --title "auto-generated - update API spec" --body "auto-generated - update API spec" --base "$BRANCH_NAME"
+          gh pr merge "$BRANCH_NAME" --delete-branch --squash --admin

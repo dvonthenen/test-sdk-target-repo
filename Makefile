@@ -43,6 +43,6 @@ shellcheck: #### Performs bash/shell lint
 yamllint: #### Performs yaml lint
 	hack/check/check-yaml.sh
 actionlint: #### Performs GitHub Actions lint
-	actionlint -shellcheck=
+	actionlint
 ##### LINTING TARGETS
 
