@@ -20,6 +20,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         shell: bash
         run: |
+          git config --global user.email "davidvonthenen@gmail.com"
+          git config --global user.name "dvonthenen"
           git config --global pull.rebase true
           git config --global url."https://git:$GITHUB_TOKEN@github.com".insteadOf "https://github.com"
 
