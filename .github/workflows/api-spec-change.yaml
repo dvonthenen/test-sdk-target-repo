@@ -36,7 +36,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         run: |
           git reset --hard
-          curl -LO https://github.com/dvonthenen/test-api-source-repo/blob/main/api/api.yaml
+          curl -LO https://raw.githubusercontent.com/dvonthenen/test-api-source-repo/main/api/api.yaml
           mkdir -p api
           mv -f api.yaml api/api.yaml
           java -jar swagger-codegen-cli.jar generate -i api/api.yaml -l python -o ./
