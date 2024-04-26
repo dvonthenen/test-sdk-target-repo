@@ -38,7 +38,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         run: |
           git reset --hard
-          curl -LO https://raw.githubusercontent.com/dvonthenen/test-api-source-repo/main/api/api.yaml
+          curl -LO https://raw.githubusercontent.com/dvonthenen/test-api-source-repo/${{ github.event.inputs.release_version }}/api/api.yaml
           BRANCH_NAME="api-spec-${{ github.run_id }}"
           git checkout -b "$BRANCH_NAME"
 
