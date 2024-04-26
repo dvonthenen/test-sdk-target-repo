@@ -35,7 +35,7 @@ jobs:
             CI_BUILD: true
             GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         run: |
-          get reset --hard
+          git reset --hard
           curl -LO https://github.com/dvonthenen/test-api-source-repo/blob/main/api/api.yaml
           mkdir -p api
           mv -f api.yaml api/api.yaml
