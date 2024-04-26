@@ -52,8 +52,8 @@ jobs:
           ROOT_PATH=$(pwd) # Moved this line up to ensure ROOT_PATH is set before its usage
           rm -rf "$ROOT_PATH/gh-pages/docs/${{ env.MAJOR_VERSION }}"
           mkdir -p "$ROOT_PATH/gh-pages/docs/${{ env.MAJOR_VERSION }}" # Note: Changed to use MAJOR_VERSION to create/update the major version folder
-          cd "$ROOT_PATH/deepgram"
-          pdoc "$ROOT_PATH/deepgram" -o "$ROOT_PATH/gh-pages/docs/${{ env.MAJOR_VERSION }}" # Documentation is generated/updated in the major version folder
+          cd "$ROOT_PATH/swagger_client"
+          pdoc "$ROOT_PATH/swagger_client" -o "$ROOT_PATH/gh-pages/docs/${{ env.MAJOR_VERSION }}" # Documentation is generated/updated in the major version folder
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
