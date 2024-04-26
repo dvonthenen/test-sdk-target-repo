@@ -53,6 +53,7 @@ jobs:
 
           # these files aren't useful
           pushd tmp || exit
+          rm .gitignore
           rm .README.md
           rm ./git_push.sh
           rm ./.travis.yml
