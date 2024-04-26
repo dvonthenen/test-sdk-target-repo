@@ -39,14 +39,14 @@ jobs:
         run: |
           git reset --hard
           curl -LO https://raw.githubusercontent.com/dvonthenen/test-api-source-repo/main/api/api.yaml
+          BRANCH_NAME="api-spec-${{ github.run_id }}"
+          git checkout -b "$BRANCH_NAME"
           mkdir -p api
           mv -f api.yaml api/api.yaml
           java -jar swagger-codegen-cli.jar generate -i api/api.yaml -l python -o ./
           rm swagger-codegen-cli.jar
-          BRANCH_NAME="api-spec-${{ github.run_id }}"
-          git checkout -b "$BRANCH_NAME"
           git add -A
           git commit -s -m "auto-generated - update API spec"
           git push origin "$BRANCH_NAME"
-          gh pr create --title "auto-generated - update API spec" --body "auto-generated - update API spec" --base "$BRANCH_NAME"
+          gh pr create --title "auto-generated - update API spec" --body "auto-generated - update API spec" --base "main"
           gh pr merge "$BRANCH_NAME" --delete-branch --squash --admin
