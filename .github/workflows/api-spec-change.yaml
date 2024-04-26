@@ -41,10 +41,30 @@ jobs:
           curl -LO https://raw.githubusercontent.com/dvonthenen/test-api-source-repo/main/api/api.yaml
           BRANCH_NAME="api-spec-${{ github.run_id }}"
           git checkout -b "$BRANCH_NAME"
+
+          # copy the spec file
           mkdir -p api
+          mkdir - tmp
           mv -f api.yaml api/api.yaml
-          java -jar swagger-codegen-cli.jar generate -i api/api.yaml -l python -o ./
+          java -jar swagger-codegen-cli.jar generate -i api/api.yaml -l python -o ./tmp
+
+          # we dont want to check in the generator
           rm swagger-codegen-cli.jar
+
+          # these files aren't useful
+          pushd tmp || exit
+          rm .README.md
+          rm ./git_push.sh
+          rm ./.travis.yml
+          rm -rf ./docs
+          rm ./tox.ini
+          popd || exit
+
+          # copy the generated files
+          cp -r ./tmp/* ./
+          rm -rf ./tmp
+
+          # create a PR
           git add -A
           git commit -s -m "auto-generated - update API spec"
           git push origin "$BRANCH_NAME"
