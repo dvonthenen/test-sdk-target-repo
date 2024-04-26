@@ -62,7 +62,7 @@ jobs:
           popd || exit
 
           # copy the generated files
-          cp -r ./tmp/* ./
+          cp -rf ./tmp/* ./
           rm -rf ./tmp
 
           # create a PR
