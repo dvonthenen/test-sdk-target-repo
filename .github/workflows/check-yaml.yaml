@@ -1,0 +1,29 @@
+name: Check - yaml
+
+on:
+  pull_request:
+    types:
+      - assigned
+      - opened
+      - synchronize
+      - reopened
+    paths:
+      - ".github/workflows/**"
+
+jobs:
+  checkmdlint:
+    name: Check mdlint
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v1
+
+      - name: Ensure dependencies installed
+        shell: bash
+        run: |
+          make ensure-deps
+
+      - name: Run mdlint
+        run: |
+          make mdlint
